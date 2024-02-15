@@ -1,0 +1,159 @@
+{% load static %}
+<nav class="block sm:hidden fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+   <div class="px-3 py-3 lg:px-5 lg:pl-3">
+     <div class="flex items-center justify-between">
+       <div class="flex items-center justify-start rtl:justify-end">
+         <button onclick="showSidebar()" data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+             <span class="sr-only">Open sidebar</span>
+             <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+             </svg>
+          </button>
+         <a href="{% url "dashboard" %}" class="flex ms-2 md:me-24">
+           <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">ChatApp</span>
+         </a>
+       </div>
+       <div class="flex items-center">
+           <div class="flex items-center ms-3">
+             <div class="relative border-solid border-white border-2 w-10 h-10 rounded-full text-sm bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 overflow-hidden" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+               <form id="profile_pic_form" method="post" enctype="multipart/form-data" action="{% url 'edit_profile_pic' %}">
+                  {% csrf_token %}
+                  <input class="hidden text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" onchange="update_profile_pic()" name="profile_picture">
+               </form>
+               {% if user.profile.profile_picture.url != '/media/users/default/default.png' %}
+                  <img class="w-full h-full" src="{{ user.profile.profile_picture.url }}" alt="Profile Picture">
+               {% else %}
+                  <img class="absolute w-full h-full" src="{{ user.profile.profile_picture.url }}" alt="Profile Picture">
+                  <div class="w-full h-full group hover:bg-gray-200 opacity-60 rounded-full absolute flex justify-center items-center cursor-pointer transition duration-500">
+                     <img onclick="showInput()" class="hidden group-hover:block w-12" src="https://www.svgrepo.com/show/33565/upload.svg" alt="" />
+                  </div>
+             {% endif %}
+             </div>
+         </div>
+     </div>
+   </div>
+ </nav>
+
+ <div id="currentpage" hidden>{{current_page}}</div>
+ <aside id="default-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-16 sm:pt-0 transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+    <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+         <div class="hidden sm:flex pt-6 pb-7  items-center justify-center flex-col mb-6">
+            <div class="relative border-solid border-white border-2 w-20 h-20 rounded-full overflow-hidden mb-2">
+               <form id="profile_pic_form" method="post" enctype="multipart/form-data" action="{% url 'edit_profile_pic' %}">
+                  {% csrf_token %}
+                  <input class="hidden text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" onchange="update_profile_pic()" name="profile_picture">
+               </form>
+                {% if user.profile.profile_picture.url != '/media/users/default/default.png' %}
+                  <img class="w-full h-full" src="{{ user.profile.profile_picture.url }}" alt="Profile Picture">
+                  {% else %}
+                  <img class="absolute w-full h-full" src="{{ user.profile.profile_picture.url }}" alt="Profile Picture">
+                  <div class="w-full h-full group hover:bg-gray-200 opacity-60 rounded-full absolute flex justify-center items-center cursor-pointer transition duration-500">
+                     <img onclick="showInput()" class="hidden group-hover:block w-12" src="https://www.svgrepo.com/show/33565/upload.svg" alt="" />
+                  </div>
+                {% endif %}
+            </div>
+            <div class="text-xl text-white font-bold">{{user.username}}</div>
+        </div>
+
+       <ul class="space-y-2 font-medium">
+          <li>
+             <a href="{% url "dashboard" %}" id="dashboard" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 group">
+                <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+                   <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+                   <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
+                </svg>
+                <span class="ms-3">Dashboard</span>
+             </a>
+          </li>
+          <li>
+             <a href="{% url "created-rooms" %}" id="created" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <svg viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white " fill="none">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.8333 3.75C20.3061 3.75 21.5 4.94391 21.5 6.41667V17.5833C21.5 19.0561 20.3061 20.25 18.8333 20.25H5.16667C3.69391 20.25 2.5 19.0561 2.5 17.5833V8.75L0.254242 5.29499C-0.178171 4.62974 0.299248 3.75 1.09269 3.75H18.8333ZM9.03279 12.9911H11.0086V14.9671C11.0086 15.3999 11.2634 15.8175 11.6762 15.9488C12.3609 16.1661 12.991 15.6613 12.991 15.009V12.9911H14.9672C15.4005 12.9911 15.8181 12.7358 15.949 12.3226C16.1659 11.6381 15.6606 11.0089 15.0087 11.0089H12.991V9.03332C12.991 8.60007 12.7361 8.18252 12.3233 8.05119C11.6391 7.83391 11.0086 8.33872 11.0086 8.991V11.0089H8.9909C8.33943 11.0089 7.83413 11.6381 8.05099 12.3226C8.18146 12.7358 8.59949 12.9911 9.03279 12.9911Z" fill="currentColor">
+                </path>
+               </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Created Rooms</span>
+             </a>
+          </li>
+          <li>
+             <a href="{% url "comingsoon" %}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 256 256" xml:space="preserve">
+
+                  <defs>
+                  </defs>
+                  <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
+                     <path d="M 45 57.894 c 9.286 0.466 15.157 3.168 22.276 9.937 c 4.617 4.355 8.507 5.712 13.988 5.712 c 12.438 0 10.49 -32.98 1.076 -49.12 c -3.438 -5.894 -10.227 -8.968 -16.924 -7.664 l -12.918 2.515 c -2.476 0.482 -4.987 0.723 -7.498 0.723 h 0 c -2.511 0 -5.022 -0.241 -7.498 -0.723 l -12.918 -2.515 c -6.697 -1.304 -13.487 1.77 -16.925 7.664 c -9.414 16.14 -11.362 49.12 1.076 49.12 c 5.482 0 9.372 -1.357 13.988 -5.712 C 29.843 61.062 35.714 58.36 45 57.894 L 45 57.894 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(182,184,186); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 32.799 35.828 h -4.175 v -4.175 c 0 -2.239 -1.815 -4.054 -4.054 -4.054 h 0 c -2.239 0 -4.054 1.815 -4.054 4.054 v 4.175 H 16.34 c -2.239 0 -4.054 1.815 -4.054 4.054 v 0 c 0 2.239 1.815 4.054 4.054 4.054 h 4.175 v 4.175 c 0 2.239 1.815 4.054 4.054 4.054 h 0 c 2.239 0 4.054 -1.815 4.054 -4.054 v -4.175 h 4.175 c 2.239 0 4.054 -1.815 4.054 -4.054 v 0 C 36.854 37.643 35.039 35.828 32.799 35.828 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(20,27,32); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <circle cx="65.428" cy="31.118000000000002" r="3.518" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) "/>
+                     <circle cx="65.428" cy="48.648" r="3.518" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) "/>
+                     <circle cx="56.668" cy="39.878" r="3.518" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) "/>
+                     <circle cx="74.19800000000001" cy="39.878" r="3.518" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) "/>
+                  </g>
+                  </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Games</span>
+             </a>
+          </li>
+          <li>
+             <a href="{% url "comingsoon" %}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                   <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>
+                </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Freinds</span>
+             </a>
+          </li>
+          <li>
+             <a href="{% url "comingsoon" %}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+               <svg class="flex-shrink-0 w-7 h-7 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="28" height="28" viewBox="0 0 256 256" xml:space="preserve">
+
+                  <defs>
+                  </defs>
+                  <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(40.54163424124515 40.54163424124512) scale(1.93 1.93)" >
+                     <polyline points="51.08,58.19 51.08,72.45 38.92,72.45 38.92,58.19 " style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(163,163,163); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) "/>
+                     <path d="M 72.615 4.465 h 15.411 v 3.427 c 0 19.07 -12.559 42.049 -28.284 42.668 l 4.903 -8.455 c 7.963 -4.503 15.252 -17.734 16.377 -30.785 h -8.407 V 4.465 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(163,163,163); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 30.259 50.561 C 14.533 49.941 1.974 26.962 1.974 7.892 V 4.465 h 15.412 v 6.855 H 8.979 c 1.122 13.019 8.379 26.218 16.319 30.753 L 30.259 50.561 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(163,163,163); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 61.215 82.276 h -32.43 v -3.6 c 0 -3.438 2.787 -6.224 6.224 -6.224 h 19.982 c 3.438 0 6.224 2.787 6.224 6.224 V 82.276 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(114,114,114); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <rect x="23.67" y="82.28" rx="0" ry="0" width="42.67" height="6.72" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(86,86,86); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) "/>
+                     <path d="M 72.614 1 c 0 32.373 -12.363 58.616 -27.614 58.616 S 17.386 33.373 17.386 1 H 72.614 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(188,184,168); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 45 60.616 C 29.222 60.616 16.386 33.873 16.386 1 c 0 -0.552 0.448 -1 1 -1 h 55.228 c 0.553 0 1 0.448 1 1 C 73.614 33.873 60.778 60.616 45 60.616 z M 18.39 2 C 18.637 33.311 30.479 58.616 45 58.616 c 14.521 0 26.363 -25.305 26.61 -56.616 H 18.39 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 51.075 73.452 h -12.15 c -0.552 0 -1 -0.447 -1 -1 V 58.188 c 0 -0.553 0.448 -1 1 -1 s 1 0.447 1 1 v 13.265 h 10.15 V 58.186 c 0 -0.553 0.447 -1 1 -1 s 1 0.447 1 1 v 14.267 C 52.075 73.005 51.628 73.452 51.075 73.452 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 61.216 83.276 H 28.785 c -0.552 0 -1 -0.447 -1 -1 v -3.601 c 0 -3.983 3.241 -7.224 7.224 -7.224 h 19.982 c 3.983 0 7.225 3.24 7.225 7.224 v 3.601 C 62.216 82.829 61.769 83.276 61.216 83.276 z M 29.785 81.276 h 30.431 v -2.601 c 0 -2.88 -2.344 -5.224 -5.225 -5.224 H 35.009 c -2.88 0 -5.224 2.344 -5.224 5.224 V 81.276 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 66.335 90 H 23.666 c -0.552 0 -1 -0.447 -1 -1 v -6.724 c 0 -0.553 0.448 -1 1 -1 h 42.669 c 0.553 0 1 0.447 1 1 V 89 C 67.335 89.553 66.888 90 66.335 90 z M 24.666 88 h 40.669 v -4.724 H 24.666 V 88 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 64.646 43.104 c -0.349 0 -0.688 -0.183 -0.871 -0.508 c -0.272 -0.48 -0.103 -1.091 0.378 -1.363 c 7.604 -4.3 14.397 -16.846 15.765 -28.915 h -7.303 c -0.553 0 -1 -0.448 -1 -1 s 0.447 -1 1 -1 h 8.407 c 0.28 0 0.548 0.118 0.737 0.324 c 0.188 0.207 0.283 0.483 0.259 0.762 c -1.138 13.199 -8.395 26.771 -16.881 31.57 C 64.981 43.063 64.813 43.104 64.646 43.104 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 59.741 51.56 c -0.534 0 -0.978 -0.422 -0.998 -0.961 c -0.021 -0.552 0.408 -1.017 0.96 -1.038 c 15.135 -0.596 27.323 -23.283 27.323 -41.668 V 5.464 H 72.614 c -0.553 0 -1 -0.448 -1 -1 s 0.447 -1 1 -1 h 15.412 c 0.553 0 1 0.448 1 1 v 3.428 c 0 19.661 -12.774 43.018 -29.245 43.667 C 59.769 51.56 59.755 51.56 59.741 51.56 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 30.26 51.561 c -0.013 0 -0.026 0 -0.04 -0.001 C 13.75 50.91 0.974 27.553 0.974 7.892 V 4.464 c 0 -0.552 0.448 -1 1 -1 h 15.412 c 0.552 0 1 0.448 1 1 s -0.448 1 -1 1 H 2.974 v 2.428 c 0 18.386 12.188 41.073 27.325 41.669 c 0.552 0.021 0.981 0.486 0.959 1.038 C 31.237 51.139 30.794 51.561 30.26 51.561 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                     <path d="M 25.296 43.072 c -0.168 0 -0.338 -0.042 -0.495 -0.132 C 16.346 38.111 9.115 24.554 7.982 11.405 c -0.024 -0.279 0.07 -0.556 0.259 -0.762 c 0.189 -0.206 0.457 -0.324 0.737 -0.324 h 8.408 c 0.552 0 1 0.448 1 1 s -0.448 1 -1 1 h -7.303 c 1.363 12.024 8.132 24.556 15.71 28.884 c 0.479 0.274 0.646 0.885 0.372 1.364 C 25.981 42.891 25.644 43.072 25.296 43.072 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                  </g>
+                  </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Leaderboard</span>
+             </a>
+          </li>
+          <li>
+             <a href={% url "signout" %} class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
+                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"/>
+                </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Sign out</span>
+             </a>
+          </li>
+       </ul>
+    </div>
+ </aside>
+
+ <script>
+   function showInput() {
+       var inputElement = document.getElementById('file_input');
+       inputElement.click();
+   }
+   function showSidebar(){
+      sidebar = document.getElementById('default-sidebar')
+      sidebar.classList.toggle('-translate-x-full')
+   }
+   function update_profile_pic(){
+      document.getElementById("profile_pic_form").submit();
+   }
+   document.addEventListener("DOMContentLoaded", function() {
+      let page = document.getElementById('currentpage').innerHTML;
+      if (document.getElementById(page)){
+         document.getElementById(page).classList.add('bg-gray-700');
+      }
+   })
+</script>

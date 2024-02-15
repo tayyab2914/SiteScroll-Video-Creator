@@ -1,0 +1,29 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block title %}Web Snapper{% endblock title %}
+
+
+{% block body %}
+
+
+
+<div class="antialiased">
+    {% include "../components/landingnav.html"%}
+    {% include "../components/hero.html"%}
+	
+	<div class="container px-4 lg:px-8 mx-auto max-w-screen-xl text-gray-700 overflow-x-hidden">
+		{% include "../components/cards.html"%}
+        {% include "../components/features.html"%}
+	</div>
+	
+	<!-- AOS init -->
+	<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+	<script>
+		AOS.init();
+	</script>
+</div>
+
+
+
+
+{% endblock body %}
