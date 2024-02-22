@@ -1,0 +1,165 @@
+{% extends "pages/base.html" %}
+{% block title %}Make your video{% endblock title %}
+
+{% block body %}
+{% include "../components/navbar.html"%}
+
+<div class="min-h-screen bg-gray-900 p-8">
+    <div class="max-w-md mx-auto bg-gray-800 p-6 rounded-md shadow-md">
+        <div class="mb-4">
+            <!-- Step Indicator -->
+            <ol class="flex items-center w-full p-3 space-x-2 text-sm font-medium text-center border rounded-lg shadow-sm sm:text-base bg-gray-800 border-gray-700 sm:p-4 sm:space-x-4 rtl:space-x-reverse">
+                <li id="step1-li" class="flex items-center text-yellow-500">
+                    <span class="flex items-center justify-center w-5 h-5 me-2 text-xs border  rounded-full shrink-0 border-yellow-500">
+                        1
+                    </span>
+                    Website Info
+                    <svg class="w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 9 4-4-4-4M1 9l4-4-4-4"/>
+                    </svg>
+                </li>
+                <li id="step2-li" class="flex items-center text-gray-600">
+                    <span class="flex items-center justify-center w-5 h-5 me-2 text-xs border rounded-full shrink-0 border-gray-500">
+                        2
+                    </span>
+                    Upload Video
+                    <svg class="w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 9 4-4-4-4M1 9l4-4-4-4"/>
+                    </svg>
+                </li>
+            </ol>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" action="{% url 'makevideo' %}">
+            {% csrf_token %}
+            <!-- Step 1: Website Info -->
+            <div id="step1" class="mb-4">
+                {% if  messages %}
+                    {% for message in messages %}
+                        <p class="text-center {% if message.tags == 'error' %}text-red-500{% elif message.tags == 'success' %}text-green-500{% endif %} text-sm mb-2">
+                            {{ message }} 
+                        </p>
+                    {% endfor %}
+                {% endif %}
+                <h2 class="text-xl text-gray-200 font-semibold mb-4">Step 1: Website Info</h2>
+                
+                    
+                <!-- File Upload or Textarea for Website Links -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300" for="fileOrLinks">Upload CSV</label>
+                    <input type="file" id="CsvFileLinks" name="CsvFileLinks" class="mt-1 block w-full focus:ring border-gray-600 focus:border-blue-500 focus:ring-blue-800 bg-gray-700 rounded-md shadow-sm">
+                    <!-- OR use a textarea for entering links -->
+                    <h1 class="block text-sm pt-8 font-medium text-gray-300">Or Enter Website Links in CSV format</h1>
+                <textarea id="textLinks" name="textLinks" rows="4" placeholder="https://www.google.com/,https://www.facebook.com/" class="text-gray-300 mt-1 block w-full focus:ring border-gray-600 focus:border-blue-500 focus:ring-blue-800 bg-gray-700 rounded-md shadow-sm"></textarea>
+                </div>
+
+                <button type="button" onclick="toggleStep('step2')" class="w-full submit-btn py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+                    Next
+                </button>
+            </div>
+
+            <!-- Step 2: Upload Video -->
+            <div id="step2" class="hidden">
+                <h2 class="text-xl text-gray-200 font-semibold mb-4">Step 2: Upload Video</h2>
+                
+                <!-- File Upload for Video -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300" for="videoFile">Upload Video</label>
+                    <input type="file" id="videoFile" name="videoFile" class="mt-1 block w-full focus:ring border-gray-600 focus:border-blue-500 focus:ring-blue-800 bg-gray-700 rounded-md shadow-sm">
+                </div>
+
+                <div class="flex justify-between">
+                    <button type="button" onclick="toggleStep('step1')" class="mx-2 w-1/2 bg-gray-300 text-gray-800 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring focus:border-blue-300">
+                        Previous
+                    </button>
+                    <button type="submit" class="w-1/2 submit-btn py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        <form>
+    </div>
+
+    <script>
+        function toggleStep(stepId) {
+            // Hide current step
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById(stepId).classList.remove('hidden');
+    
+            // Access the <li> and <span> elements for both steps
+            const li1 = document.getElementById('step1-li');
+            const span1 = li1.querySelector('span');
+            const li2 = document.getElementById('step2-li');
+            const span2 = li2.querySelector('span');
+    
+            // Reset styles for both steps
+            li1.classList.remove('text-gray-600');
+            span1.classList.remove('border-gray-500');
+            li2.classList.remove('text-gray-600');
+            span2.classList.remove('border-gray-500');
+    
+            // Apply styles based on the selected step
+            if (stepId === 'step1') {
+                li1.classList.add('text-yellow-500');
+                span1.classList.add('border-yellow-500');
+                li2.classList.add('text-gray-600');
+                span2.classList.add('border-gray-500');
+                li2.classList.remove('text-yellow-500');
+                span2.classList.remove('border-yellow-500');
+            } else if (stepId === 'step2') {
+                li1.classList.add('text-yellow-500');
+                span1.classList.add('border-yellow-500');
+                li2.classList.remove('text-gray-600');
+                span2.classList.remove('border-gray-500');
+                li2.classList.add('text-yellow-500');
+                span2.classList.add('border-yellow-500');
+            }
+        }
+
+
+        window.onload = function() {
+      
+            user_video_id = "{{user_video_id}}";
+            if (user_video_id.length > 0){
+
+                var xhr = new XMLHttpRequest();
+                var user_video_id_param = parseInt(user_video_id, 10);
+                var video_width = 1200;
+                var video_height = 800;
+                var mask_radius = 300;
+                var mask_width = 300;
+
+                var url = '/snip/generate_videos_for_links/?user_video_id=' + encodeURIComponent(user_video_id_param) + '&video_width=' + encodeURIComponent(video_width) + '&video_height=' + encodeURIComponent(video_height) + '&mask_radius=' + encodeURIComponent(mask_radius) + '&mask_width=' + encodeURIComponent(mask_width);
+                xhr.open('GET', url, true);
+
+                // Set up the event listener for when the request completes
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        // Successful response, handle it here
+                        console.log(xhr.responseText);
+                    } else {
+                        // Error response, handle it here
+                        console.error('Request failed with status: ' + xhr.status);
+                    }
+                };
+
+                // Set up the event listener for network errors
+                xhr.onerror = function() {
+                    console.error('Network error occurred');
+                };
+
+                // Send the GET request
+                xhr.send();
+                window.location.href = "/snip/project/"+user_video_id+'/';
+            }
+        };
+    
+
+
+    </script>
+     
+</div>
+
+
+{% endblock body %}

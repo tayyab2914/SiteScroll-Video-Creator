@@ -29,7 +29,7 @@ def signin(request):
             else:
                 # messages.success(request, "User Authenticated!")
                 login(request, auth_user)
-                return redirect('/comingsoon')
+                return redirect('/snip/dashboard/')
         else:
             messages.error(request, "Invalid username or password")
     return render(request, 'pages/signin.html')
@@ -65,7 +65,7 @@ def signup(request):
                 del request.session['password']
                 login(request, user)
                 # messages.success(request, "User has registered successfuly!")
-                return redirect('/comingsoon/')
+                return redirect('/snip/dashboard/')
             else:
                 context['code_send'] = False
                 messages.error(request, "Incorrect Verification code!")
