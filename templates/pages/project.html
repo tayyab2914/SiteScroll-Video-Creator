@@ -10,10 +10,10 @@
 
         <div class="grid sm:grid-cols-2 gap-4 mb-4">
             {% for video  in scroller_video%}
-                <div class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="border rounded-lg shadow bg-gray-800 border-gray-700">
                     <div class="flex flex-col items-center pt-4 pb-10">
-                        <h5 class="text-center mb-1 text-sm font-medium text-gray-900 dark:text-white whitespace-normal break-all ">{{video.web_url}}</h5>
-                        <span class="pt-2 text-sm text-gray-500 dark:text-gray-400">
+                        <h5 class="text-center mb-1 text-sm font-medium text-white whitespace-normal break-all ">{{video.web_url}}</h5>
+                        <span class="pt-2 text-sm text-gray-400">
                             Status: 
                             {% if video.is_ready %}
                             <span class="text-green-500">Ready</span>
@@ -23,7 +23,7 @@
                         </span>
                         <div class="flex mt-4 md:mt-6">
                             {% if video.is_ready %}
-                                <a href="{% url "download_video" video.output_video_path.name %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Download Video</a>
+                                <a href="{% url "download_video" video.output_video_path.name %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white  rounded-lg focus:ring-4 focus:outline-none bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">Download Video</a>
                             {% else %}                                
                             {% endif %}
                         </div>
