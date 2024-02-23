@@ -98,8 +98,13 @@ def makevideo(request):
 
             if links_valid:
                 user_video = UserVideoProject(mask_video_path=video_file,user=request.user, project_state='Draft')
-
                 user_video.save()
+                mask_video_path = output_path = os.path.join(settings.MEDIA_ROOT, 'mask_videos', user_video.mask_video_path.path)
+                video_clip = VideoFileClip(mask_video_path)
+                video_clip_duration = video_clip.duration
+
+                if video_clip_duration > 601:
+                    return render(request, 'pages/makevideo.html')
                 for link in links:
                     scroller_video = ScrollerVideo(user=request.user, web_url=link, mask_video=user_video)
                     scroller_video.save()
