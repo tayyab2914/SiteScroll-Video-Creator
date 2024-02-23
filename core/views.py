@@ -49,8 +49,9 @@ def signup(request):
         last_name = request.POST.get('lastname')
         password = request.POST.get('password')
         code = request.POST.get('code')
+        verification_code =  request.session.get('verification_code')
         if code:
-            if code == request.session.get('verification_code'):
+            if code == verification_code:
                 email = request.session.get('email')
                 username = request.session.get('username')
                 first_name = request.session.get('first_name')
@@ -67,8 +68,18 @@ def signup(request):
                 # messages.success(request, "User has registered successfuly!")
                 return redirect('/snip/dashboard/')
             else:
-                context['code_send'] = False
-                messages.error(request, "Incorrect Verification code!")
+                attempts = request.session.get(f'{verification_code}_attempts')
+                if not attempts or int(attempts) < 2:
+                    context['code_send'] = True
+                    if attempts is None:
+                        attempts = 1
+                    else:
+                        attempts = attempts + 1
+                    messages.error(request, f"Incorrect Verification code! {3-attempts} attempts left.")
+                    request.session[f'{verification_code}_attempts'] = attempts
+                else:
+                    context['code_send'] = False
+                    messages.error(request, "Incorrect Verification code! Sign up again")
         else:
             if is_exist_email(email):
                 messages.error(request, "Email already exist!")

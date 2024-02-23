@@ -60,7 +60,6 @@ def makevideo(request):
         csv_file = request.FILES.get('CsvFileLinks')
         video_file = request.FILES.get('videoFile')
         text_links = request.POST.get('textLinks')
-        print(csv_file, video_file, text_links)
 
         ALLOWED_VIDEO_EXTENSIONS = {'mp4', 'avi', 'mkv', 'mov', 'wmv', 'flv', 'webm', 'mpeg'}
         if video_file is None:
@@ -88,7 +87,6 @@ def makevideo(request):
                 if not links:
                     messages.error(request, "Your CSV file is empty!")
         
-        print(links)
 
         # Validate each link
         links_valid = True
