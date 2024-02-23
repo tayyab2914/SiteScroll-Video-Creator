@@ -23,7 +23,7 @@
                         </span>
                         <div class="flex mt-4 md:mt-6">
                             {% if video.is_ready %}
-                                <a href="{% url "download_video" video.output_video_path.name %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white  rounded-lg focus:ring-4 focus:outline-none bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">Download Video</a>
+                                <a href="{% url "download_video" video.id %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white  rounded-lg focus:ring-4 focus:outline-none bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">Download Video</a>
                             {% else %}                                
                             {% endif %}
                         </div>

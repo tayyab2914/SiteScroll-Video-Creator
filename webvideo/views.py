@@ -11,12 +11,14 @@ import os
 
 
 @login_required(login_url='/signin')
-def download_video(request, video_filename):
+def download_video(request, video_id):
     try:
-        scroll_video_instance = ScrollerVideo.objects.get(output_video_path=video_filename,user=request.user)
+        scroll_video_instance = ScrollerVideo.objects.get(id=video_id,user=request.user)
     except Exception as e:
         return redirect('/snip/dashboard/')
 
+
+    video_filename = scroll_video_instance.output_video_path.name
     download_filename="output_video.mp4"
     video_path = os.path.join(settings.MEDIA_ROOT, 'output_videos', video_filename)
     if os.path.exists(video_path):
