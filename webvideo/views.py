@@ -35,7 +35,7 @@ def project(request, id):
     context={}
     user_videos = UserVideoProject.objects.filter(id=id)
     if not user_videos.exists():
-        return redirect('/snip/dashboard')
+        return redirect('/snip/dashboard/')
     user_videos = user_videos.first()
     if not user_videos.user == request.user:
         return redirect('/snip/dashboard')
@@ -43,6 +43,16 @@ def project(request, id):
     context['scroller_video'] = scroller_video
     return render(request, 'pages/project.html', context)
 
+@login_required(login_url='/signin')
+def delete_project(request, id):
+    try:
+        user_video = UserVideoProject.objects.get(id=id, user=request.user)
+    except Exception as e:
+        messages.error(request, "Unauthenticated")
+        return redirect('/snip/dashboard/')
+    user_video.delete()
+    messages.success(request, "Project deleted successfully!")
+    return redirect('/snip/dashboard/')
 
 
 @login_required(login_url='/signin')
@@ -57,17 +67,25 @@ def dashboard(request):
 @login_required(login_url='/signin')
 def makevideo(request):
     if request.method=="POST":
+
+        allowed_projects = 5
+        user_video = UserVideoProject.objects.filter(user=request.user)
+        print(user_video.count())
+        if user_video.count() >= allowed_projects:
+            messages.error(request, f"You cannot create more than {allowed_projects} projects!")
+            return redirect('/snip/dashboard/')
+
         csv_file = request.FILES.get('CsvFileLinks')
         video_file = request.FILES.get('videoFile')
         text_links = request.POST.get('textLinks')
 
-        ALLOWED_VIDEO_EXTENSIONS = {'mp4', 'avi', 'mkv', 'mov', 'wmv', 'flv', 'webm', 'mpeg'}
+        ALLOWED_VIDEO_EXTENSIONS = {'mp4'}
         if video_file is None:
             messages.error(request, "Please upload a video.")
         else:
             videofile_extension = video_file.name.split('.')[-1]
             if not videofile_extension in ALLOWED_VIDEO_EXTENSIONS:
-                messages.error(request, "Invalid video file format")
+                messages.error(request, f"Invalid video file format. {ALLOWED_VIDEO_EXTENSIONS} format supported!")
                 return render(request, 'pages/makevideo.html')
 
         links = []    
