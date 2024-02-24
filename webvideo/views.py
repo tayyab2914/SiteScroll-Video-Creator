@@ -144,17 +144,22 @@ def generate_videos_for_links(request):
     user_video.project_state = 'In Progress'
     user_video.save()
     scroll_videos = ScrollerVideo.objects.filter(mask_video=user_video)
-    for scroll_video_instance in scroll_videos:
-        screenshot_path = take_screenshot(scroller_video_instance=scroll_video_instance, url=scroll_video_instance.web_url, width=video_width, height=video_height)
-        scrolling_video = scroll_screenshot(screenshot_path=screenshot_path, mask_path=scroll_video_instance.mask_video.mask_video_path.path, scrolling_width=video_width, scrolling_height=video_height)
-        output_path = create_mask_and_merge(scroll_video=scrolling_video, mask_path=scroll_video_instance.mask_video.mask_video_path.path, mask_radius=mask_radius, mask_width=mask_width)
+    try:
+        for scroll_video_instance in scroll_videos:
+            screenshot_path = take_screenshot(scroller_video_instance=scroll_video_instance, url=scroll_video_instance.web_url, width=video_width, height=video_height)
+            scrolling_video = scroll_screenshot(screenshot_path=screenshot_path, mask_path=scroll_video_instance.mask_video.mask_video_path.path, scrolling_width=video_width, scrolling_height=video_height)
+            output_path = create_mask_and_merge(scroll_video=scrolling_video, mask_path=scroll_video_instance.mask_video.mask_video_path.path, mask_radius=mask_radius, mask_width=mask_width)
 
-        scroll_video_instance.output_video_path = output_path
-        scroll_video_instance.is_ready = True
-        scroll_video_instance.save()
+            scroll_video_instance.output_video_path = output_path
+            scroll_video_instance.is_ready = True
+            scroll_video_instance.save()
 
-    user_video.project_state = 'Completed'
-    user_video.save()
+        user_video.project_state = 'Completed'
+        user_video.save()
+    except Exception as e:
+        print(e)
+        user_video.project_state = 'Error'
+        messages.error(request, f'Error: {e}')
     return HttpResponse("Video Project Completed!")
 
 

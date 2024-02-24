@@ -13,6 +13,13 @@
                     Create New Video Project
                 </a>
             </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="text-center {% if message.tags == 'error' %}text-red-500{% elif message.tags == 'success' %}text-green-500{% endif %} text-sm mb-2">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+            {% endif %}
 
             <div class="flex items-center justify-center h-19 mb-4 p-2 bg-gray-900 text-gray-200 text-center">
                 <span class="inline-block text-2xl">Created Projects</span>

@@ -8,6 +8,13 @@
 <div class="min-h-screen p-4 bg-gray-900">
     <div class="p-4 border-2 border-dashed rounded-lg border-gray-700">
 
+        {% if messages %}
+            {% for message in messages %}
+                <p class="text-center {% if message.tags == 'error' %}text-red-500{% elif message.tags == 'success' %}text-green-500{% endif %} text-sm mb-2">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
         <div class="grid sm:grid-cols-2 gap-4 mb-4">
             {% for video  in scroller_video%}
                 <div class="border rounded-lg shadow bg-gray-800 border-gray-700">
