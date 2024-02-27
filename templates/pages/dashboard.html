@@ -11,8 +11,10 @@
             <div class="flex items-center justify-center h-48 mb-8 rounded bg-gray-800">
                 <a href="{% url "makevideo" %}" class="px-6 py-3 sm:px-12 sm:py-6 submit-btn text-center rounded-full text-white text-xl font-bold">
                     Create New Video Project
-                </a>
+                </a>   
             </div>
+    
+            
             {% if messages %}
                 {% for message in messages %}
                     <p class="text-center {% if message.tags == 'error' %}text-red-500{% elif message.tags == 'success' %}text-green-500{% endif %} text-sm mb-2">
@@ -48,6 +50,7 @@
                 </div>
             {% else %}
                 <p class="pt-2 text-gray-200 text-center">Your created Projects will show here.</p>
+                <p class="pt-2 text-gray-200 text-sm text-center">Note: You can create upto 5 projects.</p>
             {% endif %}
           
            

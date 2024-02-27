@@ -21,7 +21,6 @@ def take_screenshot(scroller_video_instance, url, width=1200, height=800):
 
     screenshot_filename = f"{uuid.uuid4()}.png"
     screenshot_path = os.path.join(settings.MEDIA_ROOT, 'screenshots', screenshot_filename)
-    print(screenshot_path)
     driver.save_screenshot(screenshot_path)
     scroller_video_instance.screenshot_path = screenshot_path
     scroller_video_instance.save()
@@ -72,7 +71,7 @@ def circular_mask(frame, center, radius):
     return result
 
 
-def create_mask_and_merge(scroll_video, mask_path, mask_radius, mask_width):
+def create_mask_and_merge(scroll_video, mask_path):
 
     output_filename = f"{uuid.uuid4()}.mp4"
     # Load your videos
@@ -81,10 +80,11 @@ def create_mask_and_merge(scroll_video, mask_path, mask_radius, mask_width):
 
     # Apply circular mask to each frame of video2
     center = (video2.size[0] // 2, video2.size[1] // 2)
-    radius = mask_radius
+    radius = int( min(video2.size[0], video2.size[1]) / 2)
     video2 = video2.fl(lambda gf, t: circular_mask(gf(t), center, radius))
 
 
+    mask_width = int( min(video2.size[0], video2.size[1]) / 2)
     # Resize video2 and make it circular
     video2 = video2.resize(width=mask_width)  # Adjust the width of the circular video
     video2 = video2.fx(vfx.mask_color, color=(0, 0, 0), thr=0)  # Make the mask black

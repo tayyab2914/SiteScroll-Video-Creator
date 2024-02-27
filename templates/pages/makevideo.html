@@ -4,7 +4,7 @@
 {% block body %}
 {% include "../components/navbar.html"%}
 
-<div class="min-h-screen bg-gray-900 p-8">
+<div class="min-h-screen bg-gray-900 p-8" x-data="{ isOpen: false }">
     <div class="max-w-md mx-auto bg-gray-800 p-6 rounded-md shadow-md">
         <div class="mb-4">
             <!-- Step Indicator -->
@@ -42,15 +42,17 @@
                     {% endfor %}
                 {% endif %}
                 <h2 class="text-xl text-gray-200 font-semibold mb-4">Step 1: Website Info</h2>
-                
-                    
+                <p class="text-gray-200">Note:</p>
+                {% for link_notice in links_notice %}
+                        <p class="text-gray-300 text-sm">{{link_notice}}</p>
+                {% endfor %}
                 <!-- File Upload or Textarea for Website Links -->
-                <div class="mb-4">
+                <div class="mb-4 pt-4">
                     <label class="block text-sm font-medium text-gray-300" for="fileOrLinks">Upload CSV</label>
                     <input type="file" id="CsvFileLinks" name="CsvFileLinks" class="mt-1 block w-full focus:ring border-gray-600 focus:border-blue-500 focus:ring-blue-800 bg-gray-700 rounded-md shadow-sm">
                     <!-- OR use a textarea for entering links -->
                     <h1 class="block text-sm pt-8 font-medium text-gray-300">Or Enter Website Links in CSV format</h1>
-                <textarea id="textLinks" name="textLinks" rows="4" placeholder="https://www.google.com/,https://www.facebook.com/" class="text-gray-300 mt-1 block w-full focus:ring border-gray-600 focus:border-blue-500 focus:ring-blue-800 bg-gray-700 rounded-md shadow-sm"></textarea>
+                    <textarea id="textLinks" name="textLinks" rows="4" placeholder="https://www.google.com/,https://www.facebook.com/" class="text-gray-300 mt-1 block w-full focus:ring border-gray-600 focus:border-blue-500 focus:ring-blue-800 bg-gray-700 rounded-md shadow-sm"></textarea>
                 </div>
 
                 <button type="button" onclick="toggleStep('step2')" class="w-full submit-btn py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
@@ -61,12 +63,15 @@
             <!-- Step 2: Upload Video -->
             <div id="step2" class="hidden">
                 <h2 class="text-xl text-gray-200 font-semibold mb-4">Step 2: Upload Video</h2>
-                
+                <p class="text-gray-200">Note:</p>
+                {% for video_notice in videos_notice %}
+                        <p class="text-gray-300 text-sm">{{video_notice}}</p>
+                {% endfor %}
+        
                 <!-- File Upload for Video -->
-                <div class="mb-4">
+                <div class="mb-4 pt-4">
                     <label class="block text-sm font-medium text-gray-300" for="videoFile">Upload Video</label>
                     <input type="file" id="videoFile" name="videoFile" class="mt-1 block w-full focus:ring border-gray-600 focus:border-blue-500 focus:ring-blue-800 bg-gray-700 rounded-md shadow-sm">
-                    <p class="text-gray-300 text-sm pt-2 ">Note: Maximum video duration: 10mins</p>
                 </div>
 
                 <div class="flex justify-between">
@@ -80,6 +85,8 @@
             </div>
         <form>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 
     <script>
         function toggleStep(stepId) {
@@ -131,7 +138,7 @@
                 var mask_radius = 300;
                 var mask_width = 300;
 
-                var url = '/snip/generate_videos_for_links/?user_video_id=' + encodeURIComponent(user_video_id_param) + '&video_width=' + encodeURIComponent(video_width) + '&video_height=' + encodeURIComponent(video_height) + '&mask_radius=' + encodeURIComponent(mask_radius) + '&mask_width=' + encodeURIComponent(mask_width);
+                var url = '/snip/generate_videos_for_links/?user_video_id=' + encodeURIComponent(user_video_id_param) + '&video_width=' + encodeURIComponent(video_width) + '&video_height=' + encodeURIComponent(video_height);
                 xhr.open('GET', url, true);
 
                 // Set up the event listener for when the request completes

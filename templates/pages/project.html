@@ -8,6 +8,9 @@
 <div class="min-h-screen p-4 bg-gray-900">
     <div class="p-4 border-2 border-dashed rounded-lg border-gray-700">
 
+        <p class="text-center text-red-500 text-sm mb-2">
+            {{ error_description }}
+        </p>
         {% if messages %}
             {% for message in messages %}
                 <p class="text-center {% if message.tags == 'error' %}text-red-500{% elif message.tags == 'success' %}text-green-500{% endif %} text-sm mb-2">
@@ -23,9 +26,11 @@
                         <span class="pt-2 text-sm text-gray-400">
                             Status: 
                             {% if video.is_ready %}
-                            <span class="text-green-500">Ready</span>
+                                <span class="text-green-500">Ready</span>
+                            {% elif not video.is_ready and error_description %}
+                                <span class="text-red-500">Error</span>
                             {% else %}
-                            <span class="text-yellow-500">In Progress</span>
+                                <span class="text-yellow-500">In Progress</span>
                             {% endif %}
                         </span>
                         <div class="flex mt-4 md:mt-6">
