@@ -84,7 +84,8 @@ def create_mask_and_merge(scroll_video, mask_path):
     video2 = video2.fl(lambda gf, t: circular_mask(gf(t), center, radius))
 
 
-    mask_width = int( min(video2.size[0], video2.size[1]) / 2)
+    
+    mask_width = 300
     # Resize video2 and make it circular
     video2 = video2.resize(width=mask_width)  # Adjust the width of the circular video
     video2 = video2.fx(vfx.mask_color, color=(0, 0, 0), thr=0)  # Make the mask black
